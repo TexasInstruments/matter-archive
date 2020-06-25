@@ -22,6 +22,8 @@
  *
  */
 
+#if CONFIG_NETWORK_LAYER_BLE
+
 #include <support/CodeUtils.h>
 #include <support/logging/CHIPLogging.h>
 #include <transport/BLE.h>
@@ -228,3 +230,4 @@ void BLE::OnNewConnection(BLEEndPoint * endPoint)
 
 } // namespace Transport
 } // namespace chip
+#endif // CONFIG_NETWORK_LAYER_BLE

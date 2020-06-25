@@ -113,13 +113,13 @@ AC_DEFUN([NL_WITH_LWIP],
     
         AC_ARG_WITH(lwip-target,
             AS_HELP_STRING([--with-lwip-target=target],
-                [Specify the target environment for which LwIP will be built.  Choose one of: standalone, nrf5, efr32, k32w, none @<:@default=standalone@:>@.]),
+                [Specify the target environment for which LwIP will be built.  Choose one of: standalone, cc13x2_26x2, nrf5, efr32, k32w, none @<:@default=standalone@:>@.]),
             [
                 if test "${nl_with_lwip}" != "internal"; then
                     AC_MSG_ERROR([--with-lwip-target can only be used when --with-lwip=internal is selected])
                 else
                     case "${withval}" in
-                    standalone|nrf5|efr32|k32w|none)
+                    standalone|cc13x2_26x2|nrf5|efr32|k32w|none)
                         nl_with_lwip_target=${withval}
                         ;;
                     *)
@@ -175,6 +175,9 @@ AC_DEFUN([NL_WITH_LWIP],
             standalone)
                 LWIP_CPPFLAGS="${LWIP_CPPFLAGS} -I${ac_abs_confdir}/src/lwip/standalone"
                 LWIP_LIBS="${LWIP_LIBS} -lpthread"
+                ;;
+            cc13x2_26x2)
+                LWIP_CPPFLAGS="${LWIP_CPPFLAGS} -I${ac_abs_confdir}/src/lwip/cc13x2_26x2 -I${ac_abs_confdir}/src/lwip/freertos"
                 ;;
             nrf5)
                 LWIP_CPPFLAGS="${LWIP_CPPFLAGS} -I${ac_abs_confdir}/src/lwip/nrf5 -I${ac_abs_confdir}/src/lwip/freertos"
@@ -327,6 +330,7 @@ AC_DEFUN([NL_WITH_LWIP],
     AM_CONDITIONAL([CHIP_WITH_LWIP], [test "${1}" == 1])
     AM_CONDITIONAL([CHIP_WITH_LWIP_INTERNAL], [test "${nl_with_lwip}" = "internal"])
     AM_CONDITIONAL([CHIP_LWIP_TARGET_STANDALONE], [test "${nl_with_lwip}" = "internal" -a "${nl_with_lwip_target}" = "standalone" ])
+    AM_CONDITIONAL([CHIP_LWIP_TARGET_CC13X2_26X2], [test "${nl_with_lwip}" = "internal" -a "${nl_with_lwip_target}" = "cc13x2_26x2" ])
     AM_CONDITIONAL([CHIP_LWIP_TARGET_NRF5], [test "${nl_with_lwip}" = "internal" -a "${nl_with_lwip_target}" = "nrf5" ])
     AM_CONDITIONAL([CHIP_LWIP_TARGET_EFR32], [test "${nl_with_lwip}" = "internal" -a "${nl_with_lwip_target}" = "efr32" ])
     AM_CONDITIONAL([CHIP_LWIP_TARGET_K32W], [test "${nl_with_lwip}" = "internal" -a "${nl_with_lwip_target}" = "k32w" ])

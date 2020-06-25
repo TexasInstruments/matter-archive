@@ -90,6 +90,16 @@ noinst_HEADERS                          = \
     @top_srcdir@/src/platform/nRF5/CHIPDevicePlatformConfig.h \
     @top_srcdir@/src/platform/nRF5/CHIPDevicePlatformEvent.h \
     @top_srcdir@/src/platform/nRF5/PlatformManagerImpl.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/ConnectivityManagerImpl.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/CC13X2_26X2Config.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/CHIPDevicePlatformConfig.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/CHIPDevicePlatformEvent.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/PlatformManagerImpl.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/radio.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/system.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/aes_alt.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/ecjpake_alt.h \
+    @top_srcdir@/src/platform/CC13X2_26X2/sha256_alt.h \
     @top_srcdir@/src/platform/EFR32/CHIPDevicePlatformConfig.h \
     @top_srcdir@/src/platform/EFR32/GroupKeyStoreImpl.h \
     @top_srcdir@/src/platform/EFR32/efr32-chip-mbedtls-config.h \
@@ -322,6 +332,37 @@ libDeviceLayer_a_SOURCES               +=       \
 endif
 
 endif # CHIP_DEVICE_LAYER_TARGET_NRF5
+
+if CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2
+
+libDeviceLayer_a_SOURCES               +=       \
+    CC13X2_26X2/PlatformManagerImpl.cpp         \
+    CC13X2_26X2/CC13X2_26X2Config.cpp           \
+    CC13X2_26X2/ConfigurationManagerImpl.cpp    \
+    CC13X2_26X2/ConnectivityManagerImpl.cpp     \
+    CC13X2_26X2/Logging.cpp                     \
+    FreeRTOS/SystemTimeSupport.cpp              \
+    $(NULL)
+
+if CHIP_ENABLE_OPENTHREAD
+libDeviceLayer_a_SOURCES               +=       \
+    CC13X2_26X2/ThreadStackManagerImpl.cpp      \
+    CC13X2_26X2/alarm.c                         \
+    CC13X2_26X2/diag.c                          \
+    CC13X2_26X2/entropy.c                       \
+    CC13X2_26X2/misc.c                          \
+    CC13X2_26X2/radio.c                         \
+    CC13X2_26X2/system.c                        \
+    CC13X2_26X2/settings.c                      \
+    CC13X2_26X2/uart.c                          \
+    CC13X2_26X2/aes_alt.c                       \
+    CC13X2_26X2/crypto_misc.c                   \
+    CC13X2_26X2/ecjpake_alt.c                   \
+    CC13X2_26X2/sha256_alt.c                    \
+    $(NULL)
+endif
+
+endif # CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2
 
 if CHIP_DEVICE_LAYER_TARGET_EFR32
 

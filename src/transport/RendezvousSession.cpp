@@ -117,7 +117,7 @@ void RendezvousSession::OnRendezvousError(CHIP_ERROR err)
     mDelegate->OnRendezvousError(err);
 }
 
-void RendezvousSession::OnRendezvousMessageReceived(PacketBuffer * buffer)
+void RendezvousSession::OnRendezvousMessageReceived(System::PacketBuffer * buffer)
 {
     if (mPairingInProgress)
     {

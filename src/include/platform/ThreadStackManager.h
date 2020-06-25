@@ -124,8 +124,10 @@ private:
     CHIP_ERROR SetThreadPollingConfig(const ConnectivityManager::ThreadPollingConfig & pollingConfig);
     bool HaveMeshConnectivity(void);
     void OnMessageLayerActivityChanged(bool messageLayerIsActive);
+#if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
     void OnCHIPoBLEAdvertisingStart(void);
     void OnCHIPoBLEAdvertisingStop(void);
+#endif // CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 
 protected:
     // Construction/destruction limited to subclasses.
@@ -277,6 +279,7 @@ inline void ThreadStackManager::OnMessageLayerActivityChanged(bool messageLayerI
     return static_cast<ImplClass *>(this)->_OnMessageLayerActivityChanged(messageLayerIsActive);
 }
 
+#if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 inline void ThreadStackManager::OnCHIPoBLEAdvertisingStart(void)
 {
     static_cast<ImplClass *>(this)->_OnCHIPoBLEAdvertisingStart();
@@ -286,6 +289,7 @@ inline void ThreadStackManager::OnCHIPoBLEAdvertisingStop(void)
 {
     static_cast<ImplClass *>(this)->_OnCHIPoBLEAdvertisingStop();
 }
+#endif // CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
 
 inline CHIP_ERROR ThreadStackManager::GetAndLogThreadStatsCounters(void)
 {

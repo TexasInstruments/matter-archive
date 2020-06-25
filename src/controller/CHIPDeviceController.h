@@ -187,11 +187,13 @@ public:
 
     void OnNewConnection(Transport::PeerConnectionState * state, SecureSessionMgrBase * mgr) override;
 
+#if CONFIG_DEVICE_LAYER && CONFIG_NETWORK_LAYER_BLE
     //////////// RendezvousSessionDelegate Implementation ///////////////
     void OnRendezvousConnectionOpened() override;
     void OnRendezvousConnectionClosed() override;
     void OnRendezvousError(CHIP_ERROR err) override;
     void OnRendezvousMessageReceived(PacketBuffer * buffer) override;
+#endif
 
 private:
     enum

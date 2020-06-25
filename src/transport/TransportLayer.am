@@ -50,3 +50,16 @@ CHIP_BUILD_TRANSPORT_LAYER_HEADER_FILES               =         \
     @top_builddir@/src/transport/Tuple.h                        \
     @top_builddir@/src/transport/UDP.h                          \
     $(NULL)
+
+if CONFIG_NETWORK_LAYER_BLE
+
+CHIP_BUILD_TRANSPORT_LAYER_SOURCE_FILES                 += \
+    @top_builddir@/src/transport/BLE.cpp                   \
+    $(NULL)
+
+CHIP_BUILD_TRANSPORT_LAYER_HEADER_FILES             += \
+    @top_builddir@/src/transport/BLE.h                 \
+    $(NULL)
+
+endif # CONFIG_NETWORK_LAYER_BLE
+

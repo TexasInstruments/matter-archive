@@ -360,7 +360,8 @@ GenericThreadStackManagerImpl_OpenThread<ImplClass>::_SetThreadDeviceType(Connec
     case ConnectivityManager::kThreadDeviceType_FullEndDevice:
         linkMode.mDeviceType   = true;
         linkMode.mRxOnWhenIdle = true;
-        otThreadSetRouterEligible(mOTInst, deviceType == ConnectivityManager::kThreadDeviceType_Router);
+        // XXX: Seth what do we do on MTD builds?
+        //otThreadSetRouterEligible(mOTInst, deviceType == ConnectivityManager::kThreadDeviceType_Router);
         break;
     case ConnectivityManager::kThreadDeviceType_MinimalEndDevice:
         linkMode.mDeviceType   = false;

@@ -30,7 +30,7 @@ lib_LIBRARIES                                                                  =
 # Never include the mbedTLS sources in a distribution; they always will get pulled from upstream
 # via git operations, hence the 'nodist_' qualifier.
 
-nodist_libmbedtls_a_SOURCES                                                    = \
+nodist_libmbedtls_a_SOURCES               = \
     repo/library/aes.c                      \
     repo/library/pem.c                      \
     repo/library/aesni.c                    \
@@ -80,6 +80,7 @@ nodist_libmbedtls_a_SOURCES                                                    =
     repo/library/ssl_cookie.c               \
     repo/library/entropy.c                  \
     repo/library/ssl_srv.c                  \
+    repo/library/entropy_poll.c             \
     repo/library/error.c                    \
     repo/library/ssl_ticket.c               \
     repo/library/gcm.c                      \
@@ -88,6 +89,7 @@ nodist_libmbedtls_a_SOURCES                                                    =
     repo/library/threading.c                \
     repo/library/hkdf.c                     \
     repo/library/hmac_drbg.c                \
+    repo/library/md5.c                      \
     repo/library/version.c                  \
     repo/library/md2.c                      \
     repo/library/version_features.c         \
@@ -99,6 +101,7 @@ nodist_libmbedtls_a_SOURCES                                                    =
     repo/library/x509_crl.c                 \
     repo/library/memory_buffer_alloc.c      \
     repo/library/x509_csr.c                 \
+    repo/library/x509_crt.c                 \
     repo/library/nist_kw.c                  \
     repo/library/x509write_crt.c            \
     repo/library/oid.c                      \

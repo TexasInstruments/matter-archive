@@ -115,6 +115,21 @@ EXTRA_DIST                                                                     =
 
 endif # CHIP_LWIP_TARGET_NRF5
 
+if CHIP_LWIP_TARGET_CC13X2_26X2
+
+liblwip_TARGET_SOURCES                                                         = \
+    freertos/sys_arch.c                                                          \
+    $(NULL)
+
+EXTRA_DIST                                                                     = \
+    freertos/arch                                                                \
+    cc13x2_26x2/arch                                                             \
+    cc13x2_26x2/lwipopts.h                                                       \
+    cc13x2_26x2/lwippools.h                                                      \
+    $(NULL)
+
+endif # CHIP_LWIP_TARGET_CC13X2_26X2
+
 if CHIP_LWIP_TARGET_EFR32
 
 liblwip_TARGET_SOURCES                                                         = \

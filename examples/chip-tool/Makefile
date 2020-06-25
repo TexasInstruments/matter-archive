@@ -33,7 +33,11 @@ include $(BUILD_SUPPORT_DIR)/standalone-chip.mk
 APP = chip-tool
 
 SRCS = \
-    $(PROJECT_ROOT)/main.cpp       \
+    $(PROJECT_ROOT)/commands/common/Command.cpp \
+    $(PROJECT_ROOT)/commands/common/EchoCommand.cpp \
+    $(PROJECT_ROOT)/commands/common/ModelCommand.cpp \
+    $(PROJECT_ROOT)/commands/common/NetworkCommand.cpp \
+    $(PROJECT_ROOT)/main.cpp \
     $(NULL)
 
 INC_DIRS = \

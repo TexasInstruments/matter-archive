@@ -47,6 +47,7 @@ template <class>
 class GenericPlatformManagerImpl_POSIX;
 } // namespace Internal
 
+class BLEEndPoint; // XXX: Seth forward definition to allow removal of BLE stuff
 class ConnectivityManagerImpl;
 
 /**

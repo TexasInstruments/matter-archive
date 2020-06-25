@@ -966,11 +966,11 @@ AC_DEFINE_UNQUOTED([CONFIG_NETWORK_LAYER_INET],[${CONFIG_NETWORK_LAYER_INET}],[D
 AC_MSG_CHECKING([device layer])
 AC_ARG_WITH(device-layer,
     [AS_HELP_STRING([--with-device-layer=LAYER],
-        [Specify the target environment for the CHIP Device Layer.  Choose one of: auto, darwin, efr32, esp32, nrf5, k32w, nrfconnect, linux, or none @<:@default=auto@:>@.])],
+        [Specify the target environment for the CHIP Device Layer.  Choose one of: auto, cc13x2_26x2, darwin, efr32, esp32, nrf5, k32w, nrfconnect, linux, or none @<:@default=auto@:>@.])],
     [
         case "${with_device_layer}" in
 
-        auto|darwin|efr32|esp32|nrf5|k32w|nrfconnect|linux|none)
+        auto|cc13x2_26x2|darwin|efr32|esp32|nrf5|k32w|nrfconnect|linux|none)
             ;;
 
         *)
@@ -983,6 +983,7 @@ AC_ARG_WITH(device-layer,
 AC_MSG_RESULT(${with_device_layer})
 
 # Disable all device layer targets by default
+CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2=0
 CHIP_DEVICE_LAYER_TARGET_DARWIN=0
 CHIP_DEVICE_LAYER_TARGET_EFR32=0
 CHIP_DEVICE_LAYER_TARGET_ESP32=0
@@ -1010,6 +1011,12 @@ if test "${with_device_layer}" = "auto"; then
 fi
 
 case "${with_device_layer}" in
+
+cc13x2_26x2)
+      CONFIG_DEVICE_LAYER=1
+      CHIP_DEVICE_LAYER_TARGET=CC13X2_26X2
+      CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2=1
+      ;;
 
 darwin)
       CONFIG_DEVICE_LAYER=1
@@ -1070,6 +1077,10 @@ AC_DEFINE_UNQUOTED([CONFIG_DEVICE_LAYER],[${CONFIG_DEVICE_LAYER}],[Define to 1 i
 
 AC_SUBST(CHIP_DEVICE_LAYER_TARGET)
 AC_DEFINE_UNQUOTED([CHIP_DEVICE_LAYER_TARGET],[${CHIP_DEVICE_LAYER_TARGET}],[Target platform name for CHIP Device Layer.])
+
+AC_SUBST(CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2)
+AM_CONDITIONAL([CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2],    [test "${CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2}" = 1])
+AC_DEFINE_UNQUOTED([CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2],[${CHIP_DEVICE_LAYER_TARGET_CC13X2_26X2}],[Define to 1 if you want to build the CHIP Device Layer for Texas Instruments CC13X2_26X2 platforms.])
 
 AC_SUBST(CHIP_DEVICE_LAYER_TARGET_DARWIN)
 AM_CONDITIONAL([CHIP_DEVICE_LAYER_TARGET_DARWIN],    [test "${CHIP_DEVICE_LAYER_TARGET_DARWIN}" = 1])
@@ -1723,7 +1734,6 @@ fi
 #
 # OpenThread
 #
-
 NL_WITH_OPTIONAL_INTERNAL_PACKAGE(
     [OpenThread],
     [OPENTHREAD],
@@ -1737,6 +1747,54 @@ NL_WITH_OPTIONAL_INTERNAL_PACKAGE(
         test -f ${chip_srcdir}/third_party/openthread/repo/configure || (cd ${chip_srcdir}/third_party/openthread/repo && ./bootstrap)
 
         case "${with_device_layer}" in
+        cc13x2_26x2)
+            ot_mbedtls_cppflags="-I${chip_srcdir}/third_party/openthreadrepo//third_party/mbedtls \
+                -I${chip_srcdir}/third_party/openthread/repo/third_party/mbedtls/repo/include \
+                -I${chip_srcdir}/src/platform/CC13X2_26X2 \
+                -DMBEDTLS_CONFIG_FILE=\<cc13x2_26x2-mbedtls-config.h\>"
+            ot_cppflags="-I${chip_srcdir}/third_party/mbedtls/repo/include \
+                -I${chip_srcdir}/third_party/openthread/repo/examples/platforms/cc1352 \
+                -I${chip_srcdir}/src/platform/CC13X2_26X2 \
+                -DOPENTHREAD_PROJECT_CORE_CONFIG_FILE=\<openthread-core-cc13x2_26x2-config.h\> \
+                -DOPENTHREAD_CORE_CONFIG_PLATFORM_CHECK_FILE=\<openthread-core-cc13x2_26x2-config-check.h\> \
+                -DMBEDTLS_CONFIG_FILE=\<cc13x2_26x2-mbedtls-config.h\> \
+                -DOPENTHREAD_CONFIG_HEAP_EXTERNAL_ENABLE=1 \
+                -DOPENTHREAD_CONFIG_JOINER_ENABLE=1 \
+                -DUART_AS_SERIAL_TRANSPORT=1"
+            OPENTHREAD_CPPFLAGS="-I\${abs_top_srcdir}/third_party/openthread/repo/include \
+                -I\${abs_top_srcdir}/third_party/openthread/repo/include \
+                -I\${abs_top_srcdir}/third_party/openthread/repo/examples/platforms \
+                -I\${abs_top_builddir}/third_party/openthread/include \
+                ${ot_mbedtls_cppflags} \
+                ${ot_cppflags}"
+            OPENTHREAD_LDFLAGS="-L${ac_pwd}/third_party/openthread"
+            OPENTHREAD_LIBS="-lopenthread-cli-mtd \
+                -lopenthread-mtd \
+                -lopenthread-platform-utils"
+
+            (mkdir -p ${ac_pwd}/third_party/openthread \
+             && cd ${ac_pwd}/third_party/openthread \
+             && CPPFLAGS="${CPPFLAGS} ${ot_cppflags}" MBEDTLS_CPPFLAGS="${ot_mbedtls_cppflags}" CFLAGS="${CFLAGS}" CXXFLAGS="${CXXFLAGS}" ${chip_srcdir}/third_party/openthread/repo/configure \
+             --disable-docs \
+             --disable-executable \
+             --disable-tools \
+             --disable-builtin-mbedtls \
+             --enable-cli \
+             --enable-mtd \
+             --host=arm-none-eabi \
+             --prefix=${prefix} \
+             --exec-prefix=${exec_prefix} \
+             --with-examples=cc1352)
+
+            if test $? != 0; then
+                AC_MSG_ERROR([Failed to configure OpenThread!])
+            fi
+
+            maybe_openthread_dirstem="openthread"
+            nl_with_openthread=internal
+            with_openthread=yes
+            ;;
+
         nrf5)
             OPENTHREAD_CPPFLAGS="-I\${abs_top_srcdir}/third_party/openthread/repo/include"
             OPENTHREAD_LDFLAGS="-L${ac_pwd}/third_party/openthread"
@@ -1896,6 +1954,7 @@ NL_WITH_OPTIONAL_INTERNAL_PACKAGE(
         maybe_openthread_dirstem=""
     ]
 )
+
 AC_SUBST(OPENTHREAD_SUBDIRS, [${maybe_openthread_dirstem}])
 AM_CONDITIONAL([CHIP_ENABLE_OPENTHREAD], [test "${nl_with_openthread}" != "no"])
 if test "${nl_with_openthread}" != "no"; then
