@@ -1,3 +1,6 @@
+##### Archived Repository for Texas Instruments Support for Matter. For the latest releases use the TI Matter Fork found here: https://github.com/TexasInstruments/matter
+
+
 # Texas Instruments Support for Matter
 
 ![TI Logo](docs/images/ti_logo.png)
